@@ -6,6 +6,7 @@ print("Welcome, this is a ship tracking application.")
 print("Here, you can view information about various ships, including their names, countries, and current statuses.")
 print("Type 'help' to show all commands or 'exit' to quit the program")
 
+
 def help():
     print("Available commands:")
     print()
@@ -13,6 +14,7 @@ def help():
     print("show_countries - Displays a list of all the countries of the ships")
     print("top_countries - Displays the top countries with the most ships")
     print("exit - Exits the program")
+
 
 def show_countries():
     unique_countries = set()
@@ -24,6 +26,7 @@ def show_countries():
     for country in sorted_countries:
         print(country)
 
+
 def top_countries():
     country_count = {}
     for ship in all_data["data"]:
@@ -31,17 +34,29 @@ def top_countries():
         if country in country_count:
             country_count[country] += 1
         else:
-            country_count[country]  = 1
+            country_count[country] = 1
 
     sorted_countries = sorted(country_count.items(), key=lambda item: item[1], reverse=True)
 
-    for country, count in sorted_countries[:5]:
+    # Eingabeaufforderung für die Anzahl der angezeigten Länder
+    num_countries = input("How many top countries would you like to see? ")
+
+    try:
+        num_countries = int(num_countries)  # Umwandlung der Eingabe in eine ganze Zahl
+        if num_countries <= 0:
+            print("Please enter a positive integer.")
+            return
+    except ValueError:
+        print("Invalid input. Please enter a number.")
+        return
+
+    for country, count in sorted_countries[:num_countries]:
         print(f"{country}: {count} ships")
+
 
 def main():
     while True:
-
-        user_command = input("Which command do you want to use?")
+        user_command = input("Which command do you want to use? ")
         if user_command == "help":
             help()
         elif user_command == "show_countries":
@@ -50,7 +65,8 @@ def main():
             top_countries()
         elif user_command == "exit":
             break
-        print("Unknown command. Type 'help' for a list of commands.")
+        else:
+            print("Unknown command. Type 'help' for a list of commands.")
 
 
 if __name__ == "__main__":
