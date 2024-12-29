@@ -1,19 +1,16 @@
+import tkinter as tk
+from tkinter import messagebox, simpledialog
 from load_data import load_data
 
+# Daten laden
 all_data = load_data()
 
-print("Welcome, this is a ship tracking application.")
-print("Here, you can view information about various ships, including their names, countries, and current statuses.")
-print("Type 'help' to show all commands or 'exit' to quit the program")
 
-
-def help():
-    print("Available commands:")
-    print()
-    print("help - Displays this help message")
-    print("show_countries - Displays a list of all the countries of the ships")
-    print("top_countries - Displays the top countries with the most ships")
-    print("exit - Exits the program")
+def show_help():
+    messagebox.showinfo("Help", "Available commands:\n"
+                                "1. Show Countries\n"
+                                "2. Top Countries\n"
+                                "3. Exit")
 
 
 def show_countries():
@@ -23,8 +20,8 @@ def show_countries():
         unique_countries.add(country)
 
     sorted_countries = sorted(unique_countries)
-    for country in sorted_countries:
-        print(country)
+    countries_text = "\n".join(sorted_countries)
+    messagebox.showinfo("Countries", countries_text)
 
 
 def top_countries():
@@ -39,35 +36,31 @@ def top_countries():
     sorted_countries = sorted(country_count.items(), key=lambda item: item[1], reverse=True)
 
     # Eingabeaufforderung für die Anzahl der angezeigten Länder
-    num_countries = input("How many top countries would you like to see? ")
+    num_countries = simpledialog.askinteger("Input", "How many top countries would you like to see?", minvalue=1)
 
-    try:
-        num_countries = int(num_countries)  # Umwandlung der Eingabe in eine ganze Zahl
-        if num_countries <= 0:
-            print("Please enter a positive integer.")
-            return
-    except ValueError:
-        print("Invalid input. Please enter a number.")
-        return
+    if num_countries is None:
+        return  # Der Benutzer hat das Dialogfeld abgebrochen
 
-    for country, count in sorted_countries[:num_countries]:
-        print(f"{country}: {count} ships")
+    top_countries_text = "\n".join([f"{country}: {count} ships" for country, count in sorted_countries[:num_countries]])
+    messagebox.showinfo("Top Countries", top_countries_text)
 
 
-def main():
-    while True:
-        user_command = input("Which command do you want to use? ")
-        if user_command == "help":
-            help()
-        elif user_command == "show_countries":
-            show_countries()
-        elif user_command == "top_countries":
-            top_countries()
-        elif user_command == "exit":
-            break
-        else:
-            print("Unknown command. Type 'help' for a list of commands.")
+# Hauptfenster erstellen
+root = tk.Tk()
+root.title("Ship Tracking Application")
 
+# Buttons erstellen
+help_button = tk.Button(root, text="Help", command=show_help)
+help_button.pack(pady=10)
 
-if __name__ == "__main__":
-    main()
+show_countries_button = tk.Button(root, text="Show Countries", command=show_countries)
+show_countries_button.pack(pady=10)
+
+top_countries_button = tk.Button(root, text="Top Countries", command=top_countries)
+top_countries_button.pack(pady=10)
+
+exit_button = tk.Button(root, text="Exit", command=root.quit)
+exit_button.pack(pady=10)
+
+# Hauptloop starten
+root.mainloop()
