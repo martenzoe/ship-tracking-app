@@ -7,6 +7,7 @@ all_data = load_data()
 
 
 def show_help():
+    """Displays a help message with available commands."""
     messagebox.showinfo("Help", "Available commands:\n"
                                 "1. Show Countries\n"
                                 "2. Top Countries\n"
@@ -14,6 +15,7 @@ def show_help():
 
 
 def show_countries():
+    """Displays a list of all unique countries from the ship data."""
     unique_countries = set()
     for ship in all_data["data"]:
         country = ship["COUNTRY"]
@@ -25,6 +27,11 @@ def show_countries():
 
 
 def top_countries():
+    """Displays the top countries with the most ships based on user input.
+
+    Prompts the user for the number of top countries to display and shows
+    the corresponding countries along with their ship counts.
+    """
     country_count = {}
     for ship in all_data["data"]:
         country = ship["COUNTRY"]
